@@ -4,7 +4,6 @@
  * 2/10/2023
  */
 
-
 using System;
 
 namespace TicTacToe
@@ -54,9 +53,17 @@ namespace TicTacToe
 
         static void StartGame()
         {
+            // Reset the game board
+            arr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            currentPlayer = 1;
+
             Console.WriteLine($"Player 1: {player1Symbol}");
             Console.WriteLine($"Player 2: {player2Symbol}");
             Console.WriteLine("\n");
+
+            // Prompt the players to press enter to start the game
+            Console.WriteLine("Press enter to start the game.");
+            Console.ReadLine();
 
             do
             {
