@@ -65,6 +65,22 @@ namespace TicTacToe
             Console.WriteLine("Press enter to start the game.");
             Console.ReadLine();
 
+            // Prompt the player to choose who goes first
+            Console.Write("Who would you like to go first? (1 for Player 1, 2 for Player 2): ");
+            string? input = Console.ReadLine();
+            bool isNumeric = int.TryParse(input, out int firstPlayer);
+
+            // Check if the input was successfully parsed and is valid
+            if (!isNumeric || firstPlayer < 1 || firstPlayer > 2)
+            {
+                Console.WriteLine("Invalid input. Player 1 will go first.");
+                Console.ReadLine();
+                firstPlayer = 1;
+            }
+
+            // Set the current player to the chosen player
+            currentPlayer = firstPlayer;
+
             do
             {
                 Console.Clear();
@@ -81,8 +97,8 @@ namespace TicTacToe
 
                 // Prompt user to enter a valid move
                 Console.WriteLine("Enter your move (1-9): ");
-                string? input = Console.ReadLine();
-                bool isNumeric = int.TryParse(input, out choice);
+                input = Console.ReadLine();
+                isNumeric = int.TryParse(input, out choice);
 
                 // Check if the input was successfully parsed
                 if (!isNumeric)
@@ -127,6 +143,7 @@ namespace TicTacToe
             Board();
             Console.WriteLine($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
         }
+
 
         private static bool CheckWin()
         {
