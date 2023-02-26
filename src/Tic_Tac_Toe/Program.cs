@@ -19,6 +19,41 @@ namespace TicTacToe
 
         static void Main(string[] args)
         {
+            bool exitGame = false;
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Welcome to Tic-Tac-Toe!");
+                Console.WriteLine("\n");
+                Console.WriteLine("1. Start Game");
+                Console.WriteLine("2. Exit");
+                Console.WriteLine("\n");
+
+                Console.Write("Please enter your choice: ");
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        Console.WriteLine("\n");
+                        StartGame();
+                        Console.ReadLine();
+                        break;
+                    case "2":
+                        exitGame = true;
+                        break;
+                    default:
+                        Console.WriteLine("\n");
+                        Console.WriteLine("Invalid input. Please enter 1 or 2.");
+                        Console.ReadLine();
+                        break;
+                }
+            } while (!exitGame);
+        }
+
+        static void StartGame()
+        {
             Console.WriteLine($"Player 1: {player1Symbol}");
             Console.WriteLine($"Player 2: {player2Symbol}");
             Console.WriteLine("\n");
@@ -84,7 +119,6 @@ namespace TicTacToe
             Console.Clear();
             Board();
             Console.WriteLine($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
-            Console.ReadLine();
         }
 
         private static bool CheckWin()
