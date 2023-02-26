@@ -12,55 +12,78 @@ namespace TicTacToe
     class Program
     {
         static char[] arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        static int player = 1;
+        static char player1Symbol = 'X';
+        static char player2Symbol = 'O';
+        static int currentPlayer = 1;
         static int choice;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Player 1: X");
-            Console.WriteLine("Player 2: O");
+            Console.WriteLine($"Player 1: {player1Symbol}");
+            Console.WriteLine($"Player 2: {player2Symbol}");
             Console.WriteLine("\n");
 
             do
             {
                 Console.Clear();
-                if (player % 2 == 0)
+                if (currentPlayer == 1)
                 {
-                    Console.WriteLine("Player 2 turn");
+                    Console.WriteLine($"Player {currentPlayer}'s turn ({player1Symbol})");
                 }
                 else
                 {
-                    Console.WriteLine("Player 1 turn");
+                    Console.WriteLine($"Player {currentPlayer}'s turn ({player2Symbol})");
                 }
                 Console.WriteLine("\n");
                 Board();
-                choice = int.Parse(Console.ReadLine());
 
-                if (arr[choice] != 'X' && arr[choice] != 'O')
+                // Prompt user to enter a valid move
+                Console.WriteLine("Enter your move (1-9): ");
+                string input = Console.ReadLine();
+                bool isNumeric = int.TryParse(input, out choice);
+
+                // Check if the input was successfully parsed
+                if (!isNumeric)
                 {
-                    if (player % 2 == 0)
-                    {
-                        arr[choice] = 'O';
-                        player++;
-                    }
-                    else
-                    {
-                        arr[choice] = 'X';
-                        player++;
-                    }
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
+                    Console.ReadLine();
+                    continue;
+                }
+
+                if (choice < 1 || choice > 9)
+                {
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
+                    Console.ReadLine();
+                    continue;
+                }
+
+                // Check if the chosen cell is already occupied
+                if (arr[choice] == player1Symbol || arr[choice] == player2Symbol)
+                {
+                    Console.WriteLine($"Sorry, the cell {choice} is already occupied by {arr[choice]}");
+                    Console.WriteLine("\n");
+                    Console.WriteLine("Please wait 2 seconds while the board is loading again.....");
+                    Console.ReadLine();
                 }
                 else
                 {
-                    Console.WriteLine("Sorry the cell {0} is already occupied", choice);
-                    Console.WriteLine("\n");
-                    Console.WriteLine("Please wait 2 second board is loading again.....");
-                    Console.ReadLine();
+                    // Set the cell to the current player's symbol and switch to the next player
+                    if (currentPlayer == 1)
+                    {
+                        arr[choice] = player1Symbol;
+                        currentPlayer = 2;
+                    }
+                    else
+                    {
+                        arr[choice] = player2Symbol;
+                        currentPlayer = 1;
+                    }
                 }
             } while (!CheckWin());
 
             Console.Clear();
             Board();
-            Console.WriteLine("Player {0} has won!", (player % 2) + 1);
+            Console.WriteLine($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
             Console.ReadLine();
         }
 
@@ -74,13 +97,13 @@ namespace TicTacToe
         private static void Board()
         {
             Console.WriteLine("     |     |      ");
-            Console.WriteLine("  {0}  |  {1}  |  {2}", arr[1], arr[2], arr[3]);
+            Console.WriteLine($"  {arr[1]}  |  {arr[2]}  |  {arr[3]}");
             Console.WriteLine("_____|_____|_____ ");
             Console.WriteLine("     |     |      ");
-            Console.WriteLine("  {0}  |  {1}  |  {2}", arr[4], arr[5], arr[6]);
+            Console.WriteLine($"  {arr[4]}  |  {arr[5]}  |  {arr[6]}");
             Console.WriteLine("_____|_____|_____ ");
             Console.WriteLine("     |     |      ");
-            Console.WriteLine("  {0}  |  {1}  |  {2}", arr[7], arr[8], arr[9]);
+            Console.WriteLine($"  {arr[7]}  |  {arr[8]}  |  {arr[9]}");
             Console.WriteLine("     |     |      ");
         }
     }
