@@ -30,7 +30,7 @@ namespace TicTacToe
                 Console.WriteLine("\n");
 
                 Console.Write("Please enter your choice: ");
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
 
                 switch (input)
                 {
@@ -81,7 +81,7 @@ namespace TicTacToe
 
                 // Prompt user to enter a valid move
                 Console.WriteLine("Enter your move (1-9): ");
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
                 bool isNumeric = int.TryParse(input, out choice);
 
                 // Check if the input was successfully parsed
