@@ -1,7 +1,7 @@
-﻿/*HW_TicTacToe_Task1_drusse14
+﻿/*HW_TicTacToe_Task2_drusse14
  * DeMario Russell
  * CIS - 285
- * 2/10/2023
+ * 2/26/2023
  */
 
 using System;
