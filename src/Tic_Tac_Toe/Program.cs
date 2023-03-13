@@ -25,8 +25,9 @@ namespace TicTacToe
                 Console.Clear();
                 Console.WriteLine("Welcome to Tic-Tac-Toe!");
                 Console.WriteLine("\n");
-                Console.WriteLine("1. Start Game");
-                Console.WriteLine("2. Exit");
+                Console.WriteLine("1. Play against a friend");
+                Console.WriteLine("2. Play against the computer");
+                Console.WriteLine("3. Exit");
                 Console.WriteLine("\n");
 
                 Console.Write("Please enter your choice: ");
@@ -36,22 +37,27 @@ namespace TicTacToe
                 {
                     case "1":
                         Console.WriteLine("\n");
-                        StartGame();
+                        PlayGame(false); // Play against a friend
                         Console.ReadLine();
                         break;
                     case "2":
+                        Console.WriteLine("\n");
+                        PlayGame(true); // Play against the computer
+                        Console.ReadLine();
+                        break;
+                    case "3":
                         exitGame = true;
                         break;
                     default:
                         Console.WriteLine("\n");
-                        Console.WriteLine("Invalid input. Please enter 1 or 2.");
+                        Console.WriteLine("Invalid input. Please enter 1, 2, or 3.");
                         Console.ReadLine();
                         break;
                 }
             } while (!exitGame);
         }
 
-        static void StartGame()
+        static void PlayGame(bool isAgainstComputer)
         {
             // Reset the game board
             arr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -63,7 +69,16 @@ namespace TicTacToe
             player2Symbol = player1Symbol == 'X' ? 'O' : 'X'; // Set player 2's symbol to the opposite of player 1's
 
             Console.WriteLine($"Player 1: {player1Symbol}");
-            Console.WriteLine($"Player 2: {player2Symbol}");
+
+            if (isAgainstComputer)
+            {
+                Console.WriteLine($"You are playing against the computer ({player2Symbol})");
+            }
+            else
+            {
+                Console.WriteLine($"Player 2: {player2Symbol}");
+            }
+
             Console.WriteLine("\n");
 
             // Prompt the players to press enter to start the game
@@ -71,14 +86,18 @@ namespace TicTacToe
             Console.ReadLine();
 
             // Prompt the player to choose who goes first
-            Console.Write("Who would you like to go first? (1 for Player 1, 2 for Player 2): ");
+            Console.Write("Who would you like to go first? (1 for Player 1, 2 for the computer): ");
+
+            // If playing against the computer, set the computer as the second player
+            int maxPlayer = isAgainstComputer ? 2 : 1;
+
             string? input = Console.ReadLine();
             bool isNumeric = int.TryParse(input, out int firstPlayer);
 
             // Check if the input was successfully parsed and is valid
-            if (!isNumeric || firstPlayer < 1 || firstPlayer > 2)
+            if (!isNumeric || firstPlayer < 1 || firstPlayer > maxPlayer)
             {
-                Console.WriteLine("Invalid input. Player 1 will go first.");
+                Console.WriteLine($"Invalid input. Player 1 will go first against {(isAgainstComputer ? "the computer" : "Player 2")}.");
                 Console.ReadLine();
                 firstPlayer = 1;
             }
