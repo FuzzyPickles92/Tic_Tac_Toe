@@ -1,7 +1,7 @@
-﻿/*HW_TicTacToe_Task2_drusse14
+﻿/*HW_TicTacToe_Task3_drusse14
  * DeMario Russell
  * CIS - 285
- * 2/26/2023
+ * 3/13/2023
  */
 
 using System;
@@ -57,6 +57,11 @@ namespace TicTacToe
             arr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             currentPlayer = 1;
 
+            // Prompt the players to select their symbols
+            Console.WriteLine("Player 1, choose your symbol (X or O):");
+            player1Symbol = Console.ReadLine()?.ToUpper()?.FirstOrDefault() ?? 'X';
+            player2Symbol = player1Symbol == 'X' ? 'O' : 'X'; // Set player 2's symbol to the opposite of player 1's
+
             Console.WriteLine($"Player 1: {player1Symbol}");
             Console.WriteLine($"Player 2: {player2Symbol}");
             Console.WriteLine("\n");
@@ -96,21 +101,30 @@ namespace TicTacToe
                 Board();
 
                 // Prompt user to enter a valid move
-                Console.WriteLine("Enter your move (1-9): ");
+                Console.WriteLine("Enter your move (1-9), or enter 0 to exit the game: ");
                 input = Console.ReadLine();
+
+                // Check if the user wants to exit the game
+                if (input == "0")
+                {
+                    Console.WriteLine("\nExiting the game...");
+                    Console.ReadLine();
+                    return;
+                }
+
                 isNumeric = int.TryParse(input, out choice);
 
                 // Check if the input was successfully parsed
                 if (!isNumeric)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9, or enter 0 to exit the game.");
                     Console.ReadLine();
                     continue;
                 }
 
-                if (choice < 1 || choice > 9)
+                if (choice < 0 || choice > 9)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9, or enter 0 to exit the game.");
                     Console.ReadLine();
                     continue;
                 }
@@ -143,7 +157,6 @@ namespace TicTacToe
             Board();
             Console.WriteLine($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
         }
-
 
         private static bool CheckWin()
         {
