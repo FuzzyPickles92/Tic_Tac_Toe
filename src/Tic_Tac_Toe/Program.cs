@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Linq;
 
 namespace TicTacToe
 {
@@ -23,25 +24,22 @@ namespace TicTacToe
             do
             {
                 Console.Clear();
-                Console.WriteLine("Welcome to Tic-Tac-Toe!");
-                Console.WriteLine("\n");
+                Console.WriteLine("Welcome to Tic-Tac-Toe!\n");
                 Console.WriteLine("1. Play against a friend");
                 Console.WriteLine("2. Play against the computer");
-                Console.WriteLine("3. Exit");
-                Console.WriteLine("\n");
-
+                Console.WriteLine("3. Exit\n");
                 Console.Write("Please enter your choice: ");
                 string? input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
-                        Console.WriteLine("\n");
+                        Console.WriteLine();
                         PlayGame(false); // Play against a friend
                         Console.ReadLine();
                         break;
                     case "2":
-                        Console.WriteLine("\n");
+                        Console.WriteLine();
                         PlayGame(true); // Play against the computer
                         Console.ReadLine();
                         break;
@@ -49,8 +47,7 @@ namespace TicTacToe
                         exitGame = true;
                         break;
                     default:
-                        Console.WriteLine("\n");
-                        Console.WriteLine("Invalid input. Please enter 1, 2, or 3.");
+                        Console.WriteLine("\nInvalid input. Please enter 1, 2, or 3.");
                         Console.ReadLine();
                         break;
                 }
@@ -65,8 +62,8 @@ namespace TicTacToe
 
             // Prompt the players to select their symbols
             Console.WriteLine("Player 1, choose your symbol (X or O):");
-            player1Symbol = Console.ReadLine()?.ToUpper()?.FirstOrDefault() ?? 'X';
-            player2Symbol = player1Symbol == 'X' ? 'O' : 'X'; // Set player 2's symbol to the opposite of player 1's
+            player1Symbol = (Console.ReadLine()?.Trim().ToUpper().FirstOrDefault() == 'X') ? 'X' : 'O';
+            player2Symbol = (player1Symbol == 'X') ? 'O' : 'X'; // Set player 2's symbol to the opposite of player 1's
 
             Console.WriteLine($"Player 1: {player1Symbol}");
 
@@ -79,17 +76,17 @@ namespace TicTacToe
                 Console.WriteLine($"Player 2: {player2Symbol}");
             }
 
-            Console.WriteLine("\n");
+            Console.WriteLine();
 
             // Prompt the players to press enter to start the game
             Console.WriteLine("Press enter to start the game.");
             Console.ReadLine();
 
             // Prompt the player to choose who goes first
-            Console.Write("Who would you like to go first? (1 for Player 1, 2 for the computer): ");
+            Console.Write($"Who would you like to go first? (1 for Player 1, 2 for the computer): ");
 
             // If playing against the computer, set the computer as the second player
-            int maxPlayer = isAgainstComputer ? 2 : 1;
+            int maxPlayer = (isAgainstComputer) ? 2 : 1;
 
             string? input = Console.ReadLine();
             bool isNumeric = int.TryParse(input, out int firstPlayer);
