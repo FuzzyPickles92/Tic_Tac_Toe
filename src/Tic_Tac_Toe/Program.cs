@@ -24,11 +24,7 @@ namespace TicTacToe
             do
             {
                 Console.Clear();
-                Console.WriteLine("Welcome to Tic-Tac-Toe!\n");
-                Console.WriteLine("1. Play against a friend");
-                Console.WriteLine("2. Play against the computer");
-                Console.WriteLine("3. Exit\n");
-                Console.Write("Please enter your choice: ");
+                PrintMessage("Welcome to Tic-Tac-Toe!\n\n1. Play against a friend\n2. Play against the computer\n3. Exit\n\nPlease enter your choice: ");
                 string? input = Console.ReadLine();
 
                 switch (input)
@@ -47,12 +43,14 @@ namespace TicTacToe
                         exitGame = true;
                         break;
                     default:
-                        Console.WriteLine("\nInvalid input. Please enter 1, 2, or 3.");
+                        PrintMessage("\nInvalid input. Please enter 1, 2, or 3.");
                         Console.ReadLine();
                         break;
                 }
             } while (!exitGame);
         }
+
+
 
         static void PlayGame(bool isAgainstComputer)
         {
@@ -61,29 +59,28 @@ namespace TicTacToe
             currentPlayer = 1;
 
             // Prompt the players to select their symbols
-            Console.WriteLine("Player 1, choose your symbol (X or O):");
+            PrintMessage("Player 1, choose your symbol (X or O): ");
             player1Symbol = (Console.ReadLine()?.Trim().ToUpper().FirstOrDefault() == 'X') ? 'X' : 'O';
             player2Symbol = (player1Symbol == 'X') ? 'O' : 'X'; // Set player 2's symbol to the opposite of player 1's
-
-            Console.WriteLine($"Player 1: {player1Symbol}");
+            PrintMessage($"Player 1: {player1Symbol}");
 
             if (isAgainstComputer)
             {
-                Console.WriteLine($"You are playing against the computer ({player2Symbol})");
+                PrintMessage($"You are playing against the computer ({player2Symbol})");
             }
             else
             {
-                Console.WriteLine($"Player 2: {player2Symbol}");
+                PrintMessage($"Player 2: {player2Symbol}");
             }
 
-            Console.WriteLine();
+            PrintMessage("\n");
 
             // Prompt the players to press enter to start the game
-            Console.WriteLine("Press enter to start the game.");
+            PrintMessage("Press enter to start the game.");
             Console.ReadLine();
 
             // Prompt the player to choose who goes first
-            Console.Write($"Who would you like to go first? (1 for Player 1, 2 for the computer): ");
+            PrintMessage($"Who would you like to go first? (1 for Player 1, 2 for the computer): ");
 
             // If playing against the computer, set the computer as the second player
             int maxPlayer = (isAgainstComputer) ? 2 : 1;
@@ -94,7 +91,7 @@ namespace TicTacToe
             // Check if the input was successfully parsed and is valid
             if (!isNumeric || firstPlayer < 1 || firstPlayer > maxPlayer)
             {
-                Console.WriteLine($"Invalid input. Player 1 will go first against {(isAgainstComputer ? "the computer" : "Player 2")}.");
+                PrintMessage($"Invalid input. Player 1 will go first against {(isAgainstComputer ? "the computer" : "Player 2")}.");
                 Console.ReadLine();
                 firstPlayer = 1;
             }
@@ -107,23 +104,23 @@ namespace TicTacToe
                 Console.Clear();
                 if (currentPlayer == 1)
                 {
-                    Console.WriteLine($"Player {currentPlayer}'s turn ({player1Symbol})");
+                    PrintMessage($"Player {currentPlayer}'s turn ({player1Symbol})");
                 }
                 else
                 {
-                    Console.WriteLine($"Player {currentPlayer}'s turn ({player2Symbol})");
+                    PrintMessage($"Player {currentPlayer}'s turn ({player2Symbol})");
                 }
-                Console.WriteLine("\n");
+                PrintMessage("\n");
                 Board();
 
                 // Prompt user to enter a valid move
-                Console.WriteLine("Enter your move (1-9), or enter 0 to exit the game: ");
+                PrintMessage("Enter your move (1-9), or enter 0 to exit the game: ");
                 input = Console.ReadLine();
 
                 // Check if the user wants to exit the game
                 if (input == "0")
                 {
-                    Console.WriteLine("\nExiting the game...");
+                    PrintMessage("\nExiting the game...");
                     Console.ReadLine();
                     return;
                 }
@@ -133,14 +130,14 @@ namespace TicTacToe
                 // Check if the input was successfully parsed
                 if (!isNumeric)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9, or enter 0 to exit the game.");
+                    PrintMessage("Invalid input. Please enter a number between 1 and 9, or enter 0 to exit the game.");
                     Console.ReadLine();
                     continue;
                 }
 
                 if (choice < 0 || choice > 9)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9, or enter 0 to exit the game.");
+                    PrintMessage("Invalid input. Please enter a number between 1 and 9, or enter 0 to exit the game.");
                     Console.ReadLine();
                     continue;
                 }
@@ -148,9 +145,9 @@ namespace TicTacToe
                 // Check if the chosen cell is already occupied
                 if (arr[choice] == player1Symbol || arr[choice] == player2Symbol)
                 {
-                    Console.WriteLine($"Sorry, the cell {choice} is already occupied by {arr[choice]}");
-                    Console.WriteLine("\n");
-                    Console.WriteLine("Please wait 2 seconds while the board is loading again.....");
+                    PrintMessage($"Sorry, the cell {choice} is already occupied by {arr[choice]}");
+                    PrintMessage("\n");
+                    PrintMessage("Please wait 2 seconds while the board is loading again.....");
                     Console.ReadLine();
                 }
                 else
@@ -171,7 +168,12 @@ namespace TicTacToe
 
             Console.Clear();
             Board();
-            Console.WriteLine($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
+            PrintMessage($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
+        }
+
+        private static void PrintMessage(string message)
+        {
+            Console.WriteLine(message);
         }
 
         private static bool CheckWin()
@@ -183,15 +185,15 @@ namespace TicTacToe
 
         private static void Board()
         {
-            Console.WriteLine("     |     |      ");
-            Console.WriteLine($"  {arr[1]}  |  {arr[2]}  |  {arr[3]}");
-            Console.WriteLine("_____|_____|_____ ");
-            Console.WriteLine("     |     |      ");
-            Console.WriteLine($"  {arr[4]}  |  {arr[5]}  |  {arr[6]}");
-            Console.WriteLine("_____|_____|_____ ");
-            Console.WriteLine("     |     |      ");
-            Console.WriteLine($"  {arr[7]}  |  {arr[8]}  |  {arr[9]}");
-            Console.WriteLine("     |     |      ");
+            PrintMessage("     |     |      ");
+            PrintMessage($"  {arr[1]}  |  {arr[2]}  |  {arr[3]}");
+            PrintMessage("_____|_____|_____ ");
+            PrintMessage("     |     |      ");
+            PrintMessage($"  {arr[4]}  |  {arr[5]}  |  {arr[6]}");
+            PrintMessage("_____|_____|_____ ");
+            PrintMessage("     |     |      ");
+            PrintMessage($"  {arr[7]}  |  {arr[8]}  |  {arr[9]}");
+            PrintMessage("     |     |      ");
         }
     }
 }
