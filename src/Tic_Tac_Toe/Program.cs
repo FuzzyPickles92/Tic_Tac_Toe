@@ -1,10 +1,11 @@
-﻿/*HW_TicTacToe_Task2_drusse14
+﻿/*HW_TicTacToe_Task3_drusse14
  * DeMario Russell
  * CIS - 285
- * 2/26/2023
+ * 3/13/2023
  */
 
 using System;
+using System.Linq;
 
 namespace TicTacToe
 {
@@ -14,155 +15,231 @@ namespace TicTacToe
         static char player1Symbol = 'X';
         static char player2Symbol = 'O';
         static int currentPlayer = 1;
-        static int choice;
+        static Random rnd = new Random();
 
         static void Main(string[] args)
+        {
+            MainMenu();
+        }
+
+        static void MainMenu()
         {
             bool exitGame = false;
 
             do
             {
                 Console.Clear();
-                Console.WriteLine("Welcome to Tic-Tac-Toe!");
-                Console.WriteLine("\n");
-                Console.WriteLine("1. Start Game");
-                Console.WriteLine("2. Exit");
-                Console.WriteLine("\n");
-
-                Console.Write("Please enter your choice: ");
+                PrintMessage("Welcome to Tic-Tac-Toe!\n\n1. Play against a friend\n2. Play against the computer\n3. Exit\n\nPlease enter your choice: ");
                 string? input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
-                        Console.WriteLine("\n");
-                        StartGame();
-                        Console.ReadLine();
+                        Console.WriteLine();
+                        PlayGame(false); // Play against a friend
                         break;
                     case "2":
+                        Console.WriteLine();
+                        PlayGame(true); // Play against the computer
+                        break;
+                    case "3":
                         exitGame = true;
                         break;
                     default:
-                        Console.WriteLine("\n");
-                        Console.WriteLine("Invalid input. Please enter 1 or 2.");
+                        PrintMessage("\nInvalid input. Please enter 1, 2, or 3.");
                         Console.ReadLine();
                         break;
                 }
             } while (!exitGame);
+
+            PrintMessage("Press any key to exit...");
+            Console.ReadLine();
         }
 
-        static void StartGame()
+        static void PlayGame(bool isAgainstComputer)
         {
+            GetPlayerPreferences(isAgainstComputer, out currentPlayer, out player1Symbol, out player2Symbol);
+
             // Reset the game board
-            arr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            currentPlayer = 1;
-
-            Console.WriteLine($"Player 1: {player1Symbol}");
-            Console.WriteLine($"Player 2: {player2Symbol}");
-            Console.WriteLine("\n");
-
-            // Prompt the players to press enter to start the game
-            Console.WriteLine("Press enter to start the game.");
-            Console.ReadLine();
-
-            // Prompt the player to choose who goes first
-            Console.Write("Who would you like to go first? (1 for Player 1, 2 for Player 2): ");
-            string? input = Console.ReadLine();
-            bool isNumeric = int.TryParse(input, out int firstPlayer);
-
-            // Check if the input was successfully parsed and is valid
-            if (!isNumeric || firstPlayer < 1 || firstPlayer > 2)
+            for (int i = 0; i < arr.Length; i++)
             {
-                Console.WriteLine("Invalid input. Player 1 will go first.");
-                Console.ReadLine();
-                firstPlayer = 1;
+                arr[i] = i.ToString()[0];
             }
 
-            // Set the current player to the chosen player
-            currentPlayer = firstPlayer;
+            bool isDraw;
+
+            int move;
+            bool isValidMove;
 
             do
             {
                 Console.Clear();
-                if (currentPlayer == 1)
-                {
-                    Console.WriteLine($"Player {currentPlayer}'s turn ({player1Symbol})");
-                }
-                else
-                {
-                    Console.WriteLine($"Player {currentPlayer}'s turn ({player2Symbol})");
-                }
-                Console.WriteLine("\n");
                 Board();
 
-                // Prompt user to enter a valid move
-                Console.WriteLine("Enter your move (1-9): ");
-                input = Console.ReadLine();
-                isNumeric = int.TryParse(input, out choice);
-
-                // Check if the input was successfully parsed
-                if (!isNumeric)
+                if (isAgainstComputer && currentPlayer == 1)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
-                    Console.ReadLine();
-                    continue;
-                }
-
-                if (choice < 1 || choice > 9)
-                {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
-                    Console.ReadLine();
-                    continue;
-                }
-
-                // Check if the chosen cell is already occupied
-                if (arr[choice] == player1Symbol || arr[choice] == player2Symbol)
-                {
-                    Console.WriteLine($"Sorry, the cell {choice} is already occupied by {arr[choice]}");
-                    Console.WriteLine("\n");
-                    Console.WriteLine("Please wait 2 seconds while the board is loading again.....");
-                    Console.ReadLine();
+                    move = GetComputerMove();
                 }
                 else
                 {
-                    // Set the cell to the current player's symbol and switch to the next player
-                    if (currentPlayer == 1)
+                    PrintMessage($"\nPlayer {currentPlayer}, enter your move (1-9) or 'q' to quit: ");
+                    string? moveInput = Console.ReadLine();
+
+                    if (moveInput?.ToLower() == "q")
                     {
-                        arr[choice] = player1Symbol;
-                        currentPlayer = 2;
+                        MainMenu();
+                        return;
                     }
-                    else
-                    {
-                        arr[choice] = player2Symbol;
-                        currentPlayer = 1;
-                    }
+
+                    int.TryParse(moveInput, out move);
                 }
-            } while (!CheckWin());
+
+                isValidMove = move >= 1 && move <= 9 && arr[move] != player1Symbol && arr[move] != player2Symbol;
+
+                if (isValidMove)
+                {
+                    arr[move] = currentPlayer == 1 ? player1Symbol : player2Symbol;
+                    currentPlayer = 3 - currentPlayer;
+                }
+                else
+                {
+                    PrintMessage("Invalid move, please try again.");
+                    Console.ReadKey();
+                }
+
+            } while (!CheckWin(out isDraw));
+
 
             Console.Clear();
             Board();
-            Console.WriteLine($"Player {currentPlayer} ({(currentPlayer == 1 ? player1Symbol : player2Symbol)}) has won!");
+
+            if (isDraw)
+            {
+                PrintMessage("It's a draw!");
+            }
+            else
+            {
+                PrintMessage($"{(isAgainstComputer && currentPlayer == 1 ? "Computer" : $"Player {3 - currentPlayer}")} ({(currentPlayer == 1 ? player2Symbol : player1Symbol)}) has won!");
+            }
+
+            PrintMessage("\n1. Restart the match\n2. Change symbols\n3. Return to main menu\n4. Exit\n\nPlease enter your choice: ");
+            string? playInput = Console.ReadLine();
+
+            switch (playInput)
+            {
+                case "1":
+                    PlayGame(isAgainstComputer);
+                    break;
+                case "2":
+                    GetPlayerPreferences(isAgainstComputer, out currentPlayer, out player1Symbol, out player2Symbol);
+                    PlayGame(isAgainstComputer);
+                    break;
+                case "3":
+                    MainMenu();
+                    break;
+                case "4":
+                    PrintMessage("Press any key to exit...");
+                    Console.ReadLine();
+                    Environment.Exit(0);
+                    break;
+                default:
+                    PrintMessage("\nInvalid input. Please enter 1, 2, 3, or 4.");
+                    Console.ReadLine();
+                    break;
+            }
         }
 
-
-        private static bool CheckWin()
+        private static int GetComputerMove()
         {
-            // check the win conditions here
-            // (not included in this example for brevity)
+            // A simple logic for the computer's move: select the first available cell
+            for (int i = 1; i < arr.Length; i++)
+            {
+                if (arr[i] != player1Symbol && arr[i] != player2Symbol)
+                {
+                    return i;
+                }
+            }
+
+            return 1; // Default fallback move
+        }
+
+        static void GetPlayerPreferences(bool isAgainstComputer, out int startingPlayer, out char player1Symbol, out char player2Symbol)
+        {
+            // Set default values
+            startingPlayer = 1;
+            player1Symbol = 'X';
+            player2Symbol = 'O';
+
+            // Get user preferences for going first and symbol choice
+            if (!isAgainstComputer)
+            {
+                PrintMessage("Player 1, do you want to go first? (y/n): ");
+                string? firstPlayerInput = Console.ReadLine()?.ToLower();
+
+                if (firstPlayerInput == "n")
+                {
+                    startingPlayer = 2;
+                }
+            }
+
+            PrintMessage($"Player {startingPlayer}, do you want to use X or O? (x/o): ");
+            string? symbolInput = Console.ReadLine()?.ToLower();
+
+            if (symbolInput == "o")
+            {
+                player1Symbol = 'O';
+                player2Symbol = 'X';
+            }
+
+            PrintMessage($"\nPlayer {startingPlayer} is {player1Symbol} and will go first.");
+            PrintMessage($"Player {(startingPlayer == 1 ? 2 : 1)} is {player2Symbol} and will go second.");
+
+            PrintMessage("\nPress any key to start the game...");
+            Console.ReadKey();
+        }
+        private static void PrintMessage(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        private static bool CheckWin(out bool isDraw)
+        {
+            isDraw = false;
+
+            // Check for horizontal and vertical wins
+            for (int i = 1; i <= 7; i += 3)
+            {
+                if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2]) return true;
+            }
+            for (int i = 1; i <= 3; i++)
+            {
+                if (arr[i] == arr[i + 3] && arr[i + 3] == arr[i + 6]) return true;
+            }
+
+            // Check for diagonal wins
+            if (arr[1] == arr[5] && arr[5] == arr[9]) return true;
+            if (arr[3] == arr[5] && arr[5] == arr[7]) return true;
+
+            // Check for a draw
+            if (arr.All(x => x == player1Symbol || x == player2Symbol))
+            {
+                isDraw = true;
+            }
+
             return false;
         }
 
         private static void Board()
         {
-            Console.WriteLine("     |     |      ");
-            Console.WriteLine($"  {arr[1]}  |  {arr[2]}  |  {arr[3]}");
-            Console.WriteLine("_____|_____|_____ ");
-            Console.WriteLine("     |     |      ");
-            Console.WriteLine($"  {arr[4]}  |  {arr[5]}  |  {arr[6]}");
-            Console.WriteLine("_____|_____|_____ ");
-            Console.WriteLine("     |     |      ");
-            Console.WriteLine($"  {arr[7]}  |  {arr[8]}  |  {arr[9]}");
-            Console.WriteLine("     |     |      ");
+            PrintMessage("     |     |      ");
+            PrintMessage($"  {arr[1]}  |  {arr[2]}  |  {arr[3]}");
+            PrintMessage("_____|_____|_____ ");
+            PrintMessage("     |     |      ");
+            PrintMessage($"  {arr[4]}  |  {arr[5]}  |  {arr[6]}");
+            PrintMessage("_____|_____|_____ ");
+            PrintMessage("     |     |      ");
+            PrintMessage($"  {arr[7]}  |  {arr[8]}  |  {arr[9]}");
+            PrintMessage("     |     |      ");
         }
     }
 }
