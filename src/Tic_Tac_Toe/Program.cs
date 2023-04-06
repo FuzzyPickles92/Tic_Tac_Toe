@@ -215,29 +215,43 @@ namespace TicTacToe
         {
             isDraw = false;
 
+            bool isWin = false;
+
             // Check for horizontal and vertical wins
-            for (int i = 1; i <= 7; i += 3)
+            for (int i = 1; i <= 7 && !isWin; i += 3)
             {
-                if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2] && arr[i] != ' ') return true;
+                if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2] && arr[i] != ' ')
+                {
+                    isWin = true;
+                }
             }
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 3 && !isWin; i++)
             {
-                if (arr[i] == arr[i + 3] && arr[i + 3] == arr[i + 6] && arr[i] != ' ') return true;
+                if (arr[i] == arr[i + 3] && arr[i + 3] == arr[i + 6] && arr[i] != ' ')
+                {
+                    isWin = true;
+                }
             }
 
             // Check for diagonal wins
-            if (arr[1] == arr[5] && arr[5] == arr[9] && arr[1] != ' ') return true;
-            if (arr[3] == arr[5] && arr[5] == arr[7] && arr[3] != ' ') return true;
-
-            // Check for a draw
-            if (arr.All(x => x == 'X' || x == 'O'))
+            if (!isWin && arr[1] == arr[5] && arr[5] == arr[9] && arr[1] != ' ')
             {
-                isDraw = true;
-                return true;
+                isWin = true;
+            }
+            if (!isWin && arr[3] == arr[5] && arr[5] == arr[7] && arr[3] != ' ')
+            {
+                isWin = true;
             }
 
-            return false;
+            // Check for a draw
+            if (!isWin && arr.All(x => x == 'X' || x == 'O'))
+            {
+                isDraw = true;
+            }
+
+            return isWin || isDraw;
         }
+
 
         static void Board()
         {
