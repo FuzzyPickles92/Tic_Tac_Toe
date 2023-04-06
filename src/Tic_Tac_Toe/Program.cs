@@ -61,9 +61,9 @@ namespace TicTacToe
             GetPlayerPreferences(isAgainstComputer, out currentPlayer, out player1Symbol, out player2Symbol);
 
             // Reset the game board
-            for (int i = 0; i < arr.Length; i++)
+            for (int i = 1; i < arr.Length; i++)
             {
-                arr[i] = i.ToString()[0];
+                arr[i] = ' ';
             }
 
             bool isDraw;
@@ -76,7 +76,7 @@ namespace TicTacToe
                 Console.Clear();
                 Board();
 
-                if (isAgainstComputer && currentPlayer == 1)
+                if (isAgainstComputer && currentPlayer == 2)
                 {
                     move = GetComputerMove();
                 }
@@ -94,7 +94,7 @@ namespace TicTacToe
                     int.TryParse(moveInput, out move);
                 }
 
-                isValidMove = move >= 1 && move <= 9 && arr[move] != player1Symbol && arr[move] != player2Symbol;
+                isValidMove = move >= 1 && move <= 9 && arr[move] == ' ';
 
                 if (isValidMove)
                 {
@@ -108,7 +108,6 @@ namespace TicTacToe
                 }
 
             } while (!CheckWin(out isDraw));
-
 
             Console.Clear();
             Board();
@@ -154,7 +153,7 @@ namespace TicTacToe
             // A simple logic for the computer's move: select the first available cell
             for (int i = 1; i < arr.Length; i++)
             {
-                if (arr[i] != player1Symbol && arr[i] != player2Symbol)
+                if (arr[i] == ' ')
                 {
                     return i;
                 }
@@ -170,8 +169,17 @@ namespace TicTacToe
             player1Symbol = 'X';
             player2Symbol = 'O';
 
-            // Get user preferences for going first and symbol choice
-            if (!isAgainstComputer)
+            if (isAgainstComputer)
+            {
+                PrintMessage("Do you want to go first? (y/n): ");
+                string? firstPlayerInput = Console.ReadLine()?.ToLower();
+
+                if (firstPlayerInput == "n")
+                {
+                    startingPlayer = 2;
+                }
+            }
+            else
             {
                 PrintMessage("Player 1, do you want to go first? (y/n): ");
                 string? firstPlayerInput = Console.ReadLine()?.ToLower();
@@ -197,6 +205,7 @@ namespace TicTacToe
             PrintMessage("\nPress any key to start the game...");
             Console.ReadKey();
         }
+
         private static void PrintMessage(string message)
         {
             Console.WriteLine(message);
@@ -209,37 +218,34 @@ namespace TicTacToe
             // Check for horizontal and vertical wins
             for (int i = 1; i <= 7; i += 3)
             {
-                if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2]) return true;
+                if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2] && arr[i] != ' ') return true;
             }
             for (int i = 1; i <= 3; i++)
             {
-                if (arr[i] == arr[i + 3] && arr[i + 3] == arr[i + 6]) return true;
+                if (arr[i] == arr[i + 3] && arr[i + 3] == arr[i + 6] && arr[i] != ' ') return true;
             }
 
             // Check for diagonal wins
-            if (arr[1] == arr[5] && arr[5] == arr[9]) return true;
-            if (arr[3] == arr[5] && arr[5] == arr[7]) return true;
+            if (arr[1] == arr[5] && arr[5] == arr[9] && arr[1] != ' ') return true;
+            if (arr[3] == arr[5] && arr[5] == arr[7] && arr[3] != ' ') return true;
 
             // Check for a draw
-            if (arr.All(x => x == player1Symbol || x == player2Symbol))
+            if (arr.All(x => x == 'X' || x == 'O'))
             {
                 isDraw = true;
+                return true;
             }
 
             return false;
         }
 
-        private static void Board()
+        static void Board()
         {
-            PrintMessage("     |     |      ");
-            PrintMessage($"  {arr[1]}  |  {arr[2]}  |  {arr[3]}");
-            PrintMessage("_____|_____|_____ ");
-            PrintMessage("     |     |      ");
-            PrintMessage($"  {arr[4]}  |  {arr[5]}  |  {arr[6]}");
-            PrintMessage("_____|_____|_____ ");
-            PrintMessage("     |     |      ");
-            PrintMessage($"  {arr[7]}  |  {arr[8]}  |  {arr[9]}");
-            PrintMessage("     |     |      ");
+            Console.WriteLine(" {0} | {1} | {2}", arr[1], arr[2], arr[3]);
+            Console.WriteLine("---|---|---");
+            Console.WriteLine(" {0} | {1} | {2}", arr[4], arr[5], arr[6]);
+            Console.WriteLine("---|---|---");
+            Console.WriteLine(" {0} | {1} | {2}", arr[7], arr[8], arr[9]);
         }
     }
 }
