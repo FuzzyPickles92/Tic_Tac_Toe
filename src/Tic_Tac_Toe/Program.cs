@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace TicTacToe
 {
+    // The Program class implements a simple console-based Tic-Tac-Toe game that allows players to play against each other or against the computer.
     class Program
     {
         static char[] arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -22,6 +23,7 @@ namespace TicTacToe
             MainMenu();
         }
 
+        // The MainMenu method displays the main menu and handles user input for selecting game mode or exiting the game.
         static void MainMenu()
         {
             bool exitGame = false;
@@ -56,6 +58,7 @@ namespace TicTacToe
             Console.ReadLine();
         }
 
+        // The PlayGame method handles the game loop for playing against a friend or the computer.
         static void PlayGame(bool isAgainstComputer)
         {
             GetPlayerPreferences(isAgainstComputer, out currentPlayer, out player1Symbol, out player2Symbol);
@@ -71,6 +74,7 @@ namespace TicTacToe
             int move;
             bool isValidMove;
 
+            // Loop until there is a winner or a draw
             do
             {
                 Console.Clear();
@@ -94,6 +98,7 @@ namespace TicTacToe
                     int.TryParse(moveInput, out move);
                 }
 
+                // Check if the move is valid
                 isValidMove = move >= 1 && move <= 9 && arr[move] == ' ';
 
                 if (isValidMove)
@@ -147,7 +152,7 @@ namespace TicTacToe
                     break;
             }
         }
-
+        // The GetComputerMove method provides a simple AI for the computer to make a move.
         private static int GetComputerMove()
         {
             // A simple logic for the computer's move: select the first available cell
@@ -162,6 +167,7 @@ namespace TicTacToe
             return 1; // Default fallback move
         }
 
+        // The GetPlayerPreferences method gets user input for the starting player and their symbol (X or O).
         static void GetPlayerPreferences(bool isAgainstComputer, out int startingPlayer, out char player1Symbol, out char player2Symbol)
         {
             // Set default values
@@ -211,6 +217,7 @@ namespace TicTacToe
             Console.WriteLine(message);
         }
 
+        // The CheckWin method checks if there is a winner or a draw.
         private static bool CheckWin(out bool isDraw)
         {
             isDraw = false;
@@ -252,7 +259,7 @@ namespace TicTacToe
             return isWin || isDraw;
         }
 
-
+        // The Board method displays the game board on the console.
         static void Board()
         {
             Console.WriteLine(" {0} | {1} | {2}", arr[1], arr[2], arr[3]);
