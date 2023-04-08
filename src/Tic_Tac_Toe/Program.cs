@@ -1,15 +1,16 @@
-﻿/*HW_TicTacToe_Task3_drusse14
+﻿/*HW_TicTacToe_Task4_drusse14
  * DeMario Russell
  * CIS - 285
- * 3/13/2023
+ * 04/08/2023
  */
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TicTacToe
 {
-    // The Program class implements a simple console-based Tic-Tac-Toe game that allows players to play against each other or against the computer.
+    // The Program class implements a simple console-based Tic-Tac-Toe game that allows players to play against each other or against the computer
     class Program
     {
         static char[] arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -17,6 +18,12 @@ namespace TicTacToe
         static char player2Symbol = 'O';
         static int currentPlayer = 1;
         static Random rnd = new Random();
+
+        // Add new fields to store game statistics
+        static int gamesWon = 0;
+        static int gamesLost = 0;
+        static int gamesDraw = 0;
+        static TimeSpan totalTimePlayed = TimeSpan.Zero;
 
         static void Main(string[] args)
         {
@@ -54,7 +61,17 @@ namespace TicTacToe
                 }
             } while (!exitGame);
 
-            PrintMessage("Press any key to exit...");
+            // Display game statistics when exiting
+            PrintMessage("\nGame statistics:");
+            PrintMessage($"Games won: {gamesWon}");
+            PrintMessage($"Games lost: {gamesLost}");
+            PrintMessage($"Games draw: {gamesDraw}");
+            PrintMessage($"Total time played: {totalTimePlayed}");
+            if (gamesWon + gamesLost + gamesDraw > 0)
+            {
+                PrintMessage($"Average time per game: {TimeSpan.FromSeconds(totalTimePlayed.TotalSeconds / (gamesWon + gamesLost + gamesDraw))}");
+            }
+            PrintMessage("\nPress any key to exit...");
             Console.ReadLine();
         }
 
@@ -73,6 +90,10 @@ namespace TicTacToe
 
             int move;
             bool isValidMove;
+
+            // Add a Stopwatch to measure the time played for each game
+            Stopwatch gameTimer = new Stopwatch();
+            gameTimer.Start();
 
             // Loop until there is a winner or a draw
             do
@@ -104,6 +125,7 @@ namespace TicTacToe
                 if (isValidMove)
                 {
                     arr[move] = currentPlayer == 1 ? player1Symbol : player2Symbol;
+
                     currentPlayer = 3 - currentPlayer;
                 }
                 else
@@ -114,17 +136,50 @@ namespace TicTacToe
 
             } while (!CheckWin(out isDraw));
 
+            // Stop the game timer and add the elapsed time to the total time played
+            gameTimer.Stop();
+            totalTimePlayed += gameTimer.Elapsed;
+
             Console.Clear();
             Board();
 
             if (isDraw)
             {
                 PrintMessage("It's a draw!");
+                gamesDraw++;
             }
             else
             {
-                PrintMessage($"{(isAgainstComputer && currentPlayer == 1 ? "Computer" : $"Player {3 - currentPlayer}")} ({(currentPlayer == 1 ? player2Symbol : player1Symbol)}) has won!");
+                int winner = 3 - currentPlayer;
+                PrintMessage($"{(isAgainstComputer && currentPlayer == 1 ? "Computer" : $"Player {winner}")} ({(currentPlayer == 1 ? player2Symbol : player1Symbol)}) has won!");
+
+                // Update the gamesWon and gamesLost counters
+                if (isAgainstComputer)
+                {
+                    if (currentPlayer == 1)
+                    {
+                        gamesLost++;
+                    }
+                    else
+                    {
+                        gamesWon++;
+                    }
+                }
+                else
+                {
+                    if (winner == 1)
+                    {
+                        gamesWon++;
+                    }
+                    else
+                    {
+                        gamesLost++;
+                    }
+                }
             }
+
+            // Display game statistics after each match
+            DisplayGameStatistics();
 
             PrintMessage("\n1. Restart the match\n2. Change symbols\n3. Return to main menu\n4. Exit\n\nPlease enter your choice: ");
             string? playInput = Console.ReadLine();
@@ -146,12 +201,16 @@ namespace TicTacToe
                     Console.ReadLine();
                     Environment.Exit(0);
                     break;
+                case "5":
+                    Shutdown();
+                    break;
                 default:
-                    PrintMessage("\nInvalid input. Please enter 1, 2, 3, or 4.");
+                    PrintMessage("\nInvalid input. Please enter 1, 2, 3, 4, or 5.");
                     Console.ReadLine();
                     break;
             }
         }
+
         // The GetComputerMove method provides a simple AI for the computer to make a move.
         private static int GetComputerMove()
         {
@@ -262,11 +321,56 @@ namespace TicTacToe
         // The Board method displays the game board on the console.
         static void Board()
         {
-            Console.WriteLine(" {0} | {1} | {2}", arr[1], arr[2], arr[3]);
-            Console.WriteLine("---|---|---");
-            Console.WriteLine(" {0} | {1} | {2}", arr[4], arr[5], arr[6]);
-            Console.WriteLine("---|---|---");
-            Console.WriteLine(" {0} | {1} | {2}", arr[7], arr[8], arr[9]);
+            for (int i = 1; i <= 9; i += 3)
+            {
+                Console.WriteLine(" {0} | {1} | {2}", DisplayCell(i), DisplayCell(i + 1), DisplayCell(i + 2));
+                if (i < 7)
+                {
+                    Console.WriteLine("---|---|---");
+                }
+            }
+        }
+
+        static string DisplayCell(int cellIndex)
+        {
+            return arr[cellIndex] == ' ' ? cellIndex.ToString() : arr[cellIndex].ToString();
+        }
+
+
+        static void DisplayGameStatistics()
+        {
+            PrintMessage("\nGame statistics:");
+            PrintMessage($"Games won: {gamesWon}");
+            PrintMessage($"Games lost: {gamesLost}");
+            PrintMessage($"Games draw: {gamesDraw}");
+            PrintMessage($"Total time played: {totalTimePlayed}");
+            if (gamesWon + gamesLost + gamesDraw > 0)
+            {
+                PrintMessage($"Average time per game: {TimeSpan.FromSeconds(totalTimePlayed.TotalSeconds / (gamesWon + gamesLost + gamesDraw))}");
+            }
+        }
+
+
+        static void Shutdown()
+        {
+            PrintMessage("\nAre you sure you want to shut down the computer? (y/n): ");
+            string? shutdownInput = Console.ReadLine()?.ToLower();
+
+            if (shutdownInput == "y")
+            {
+                var psi = new ProcessStartInfo("shutdown", "/s /t 0")
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false
+                };
+                Process.Start(psi);
+            }
+            else
+            {
+                PrintMessage("Shutdown canceled. Press any key to return to the game...");
+                Console.ReadKey();
+                MainMenu();
+            }
         }
     }
 }
