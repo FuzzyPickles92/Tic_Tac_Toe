@@ -35,7 +35,7 @@ namespace TicTacToe
         {
             bool exitGame = false;
 
-            do
+            do // Loop until the user decides to exit the game
             {
                 Console.Clear();
                 PrintMessage("Welcome to Tic-Tac-Toe!\n\n1. Play against a friend\n2. Play against the computer\n3. Exit\n\nPlease enter your choice: ");
@@ -59,7 +59,7 @@ namespace TicTacToe
                         Console.ReadLine();
                         break;
                 }
-            } while (!exitGame);
+            } while (!exitGame); //This loop displays the main menu and handles user input until the user decides to exit the game. It will exit prematurely if the user inputs "3" for exitGame.
 
             // Display game statistics when exiting
             PrintMessage("\nGame statistics:");
@@ -81,7 +81,7 @@ namespace TicTacToe
             GetPlayerPreferences(isAgainstComputer, out currentPlayer, out player1Symbol, out player2Symbol);
 
             // Reset the game board
-            for (int i = 1; i < arr.Length; i++)
+            for (int i = 1; i < arr.Length; i++) //This loop initializes the game board by setting each cell in the arr array to an empty space ' '. The loop runs from index 1 to 9.
             {
                 arr[i] = ' ';
             }
@@ -134,7 +134,7 @@ namespace TicTacToe
                     Console.ReadKey();
                 }
 
-            } while (!CheckWin(out isDraw));
+            } while (!CheckWin(out isDraw)); //This loop handles the game loop, where players take turns making moves on the board. The loop continues until there's a winner or a draw. It will exit prematurely if a player wins or the game results in a draw.
 
             // Stop the game timer and add the elapsed time to the total time played
             gameTimer.Stop();
@@ -215,7 +215,7 @@ namespace TicTacToe
         private static int GetComputerMove()
         {
             // A simple logic for the computer's move: select the first available cell
-            for (int i = 1; i < arr.Length; i++)
+            for (int i = 1; i < arr.Length; i++) //This loop finds the first available cell for the computer's move by checking if the cell in the arr array is empty (' '). The loop runs from index 1 to 9. It will exit prematurely when the first available cell is found.
             {
                 if (arr[i] == ' ')
                 {
@@ -284,14 +284,14 @@ namespace TicTacToe
             bool isWin = false;
 
             // Check for horizontal and vertical wins
-            for (int i = 1; i <= 7 && !isWin; i += 3)
+            for (int i = 1; i <= 7 && !isWin; i += 3) //This loop checks for horizontal wins on the game board. The loop runs from index 1 to 7 with an increment of 3. It will exit prematurely if a horizontal win is detected.
             {
                 if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2] && arr[i] != ' ')
                 {
                     isWin = true;
                 }
             }
-            for (int i = 1; i <= 3 && !isWin; i++)
+            for (int i = 1; i <= 3 && !isWin; i++) //This loop checks for vertical wins on the game board. The loop runs from index 1 to 3. It will exit prematurely if a vertical win is detected.
             {
                 if (arr[i] == arr[i + 3] && arr[i + 3] == arr[i + 6] && arr[i] != ' ')
                 {
@@ -321,7 +321,7 @@ namespace TicTacToe
         // The Board method displays the game board on the console.
         static void Board()
         {
-            for (int i = 1; i <= 9; i += 3)
+            for (int i = 1; i <= 9; i += 3) //This loop displays the game board on the console, showing the rows and columns of the board. The loop runs from index 1 to 9 with an increment of 3. There's no premature exit in this loop.
             {
                 Console.WriteLine(" {0} | {1} | {2}", DisplayCell(i), DisplayCell(i + 1), DisplayCell(i + 2));
                 if (i < 7)
