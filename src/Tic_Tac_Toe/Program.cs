@@ -38,7 +38,7 @@ namespace TicTacToe
             do // Loop until the user decides to exit the game
             {
                 Console.Clear();
-                PrintMessage("Welcome to Tic-Tac-Toe!\n\n1. Play against a friend\n2. Play against the computer\n3. Exit\n\nPlease enter your choice: ");
+                PrintMessage("Welcome to Tic-Tac-Toe!\n\n1. Play against a friend\n2. Play against the computer\n3. Exit Application\n\nPlease enter your choice: ");
                 string? input = Console.ReadLine();
 
                 switch (input)
@@ -219,17 +219,26 @@ namespace TicTacToe
         // The GetComputerMove method provides a simple AI for the computer to make a move.
         private static int GetComputerMove()
         {
-            // A simple logic for the computer's move: select the first available cell
-            for (int i = 1; i < arr.Length; i++) //This loop finds the first available cell for the computer's move by checking if the cell in the arr array is empty (' '). The loop runs from index 1 to 9. It will exit prematurely when the first available cell is found.
+            // Initialize the move variable with the default fallback move
+            int move = 1;
+
+            // This loop finds the first available cell for the computer's move
+            // by checking if the cell in the arr array is empty (' ').
+            // The loop runs from index 1 to the length of the array - 1.
+            // It will exit prematurely when the first available cell is found.
+            for (int i = 1; i < arr.Length; i++)
             {
                 if (arr[i] == ' ')
                 {
-                    return i;
+                    move = i; // Set the move to the index of the first available cell
+                    break;    // Exit the loop once the first available cell is found
                 }
             }
 
-            return 1; // Default fallback move
+            // Return the computed move
+            return move;
         }
+
 
         // The GetPlayerPreferences method gets user input for the starting player and their symbol (X or O).
         static void GetPlayerPreferences(bool isAgainstComputer, out int startingPlayer, out char player1Symbol, out char player2Symbol)
